@@ -36,8 +36,11 @@ const formatPrice = (price: number): string => {
     .replace(".", ",");
 };
 
-const getFormattedStore = (stores: IkeaStore[], id: string): string => {
-  const store = stores.find((store) => store.id === id);
+const getStore = (stores: IkeaStore[], id: string): IkeaStore | undefined => {
+  return stores.find((store) => store.id === id);
+};
+
+const getFormattedStore = (store: IkeaStore|undefined): string => {
   if (store === undefined) return "Unknown";
   return `[${store.displayName}](https://www.google.com/maps/place/${store.lat},${store.lng})`;
 };
@@ -68,13 +71,14 @@ export const checkUpdateForSettings = async (
   for (const searchTerm of settings.searchTerms) {
     const products = await getProducts(settings.storeIds, searchTerm);
     for (const product of products) {
+      const store = getStore(stores, product.storeId);
       for (const offer of product.offers) {
         if (state.previousOffers.includes(offer.offerNumber)) continue;
         const embed = new EmbedBuilder()
           .setColor(0x32a852)
           .setTitle(product.title)
           .setURL(
-            `https://www.ikea.com/de/de/second-hand/buy-from-ikea/#/./${offer.offerNumber}`,
+            `https://www.ikea.com/de/de/second-hand/buy-from-ikea/#/${store?.displayName.toLowerCase() ?? '.'}/${offer.offerNumber}`,
           )
           .setDescription(product.description)
           .setThumbnail(product.heroImage)
@@ -87,7 +91,7 @@ export const checkUpdateForSettings = async (
             },
             {
               name: "Store",
-              value: getFormattedStore(stores, product.storeId),
+              value: getFormattedStore(store),
             },
             {
               name: "Reduction Reason",
