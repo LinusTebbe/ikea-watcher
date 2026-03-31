@@ -1,0 +1,11 @@
+{
+  "tasks": {
+    "sendUpdates": "deno run --allow-net --allow-env --allow-read --allow-write sendUpdates.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
+    "@std/json": "jsr:@std/json@^1.0.3",
+    "discord.js": "npm:discord.js@^14.26.0"
+  }
+}

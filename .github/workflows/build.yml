@@ -1,0 +1,32 @@
+name: build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deployment:
+    runs-on: self-hosted
+    concurrency:
+      group: deployment
+      cancel-in-progress: true
+    environment:
+      name: IkeaWatcherProd
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.14.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.14.0
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.7.x
+      - run: deno install
+      - run: deno fmt --check
+      - run: deno lint
+      - name: Write secrets to .env
+        run: echo '${{ toJSON(secrets) }}' | jq -r 'keys[] as $k | "\($k)=\(.[$k])"' >> .env
+      - name: Write variables to .env
+        run: echo '${{ toJSON(vars) }}' | jq -r 'keys[] as $k | "\($k)=\(.[$k])"' >> .env
+      - name: Restart PM2
+        run: pm2 start ecosystem.config.cjs
