@@ -79,7 +79,7 @@ export const checkUpdateForSettings = async (
           .setDescription(product.description)
           .setThumbnail(product.heroImage)
           .setFields(
-            { name: "New", value: formatPrice(offer.price), inline: true },
+            { name: "New Price", value: formatPrice(offer.price), inline: true },
             {
               name: "Original Price",
               value: formatPrice(product.originalPrice),
@@ -88,6 +88,14 @@ export const checkUpdateForSettings = async (
             {
               name: "Store",
               value: getFormattedStore(stores, product.storeId),
+            },
+            {
+              name: "Reduction Reason",
+              value: offer.reasonDiscount,
+            },
+            {
+              name: "Product Condition",
+              value: offer.productConditionTitle,
             },
           )
           .setTimestamp();

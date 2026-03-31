@@ -1,6 +1,8 @@
 export interface IkeaOffer {
   offerNumber: string;
   price: number;
+  reasonDiscount: string;
+  productConditionTitle: string
 }
 
 export interface IkeaProduct {
