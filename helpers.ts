@@ -99,7 +99,7 @@ export const checkUpdateForSettings = async (
             },
             {
               name: "Product Condition",
-              value: offer.productConditionTitle,
+              value: offer.productConditionTitle ?? 'N/A',
             },
           )
           .setTimestamp();
